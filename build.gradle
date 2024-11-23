@@ -1,0 +1,93 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.6'
+	id 'org.hidetake.swagger.generator' version '2.19.2'
+}
+
+group = 'com.rawafed'
+version = '0.0.1-SNAPSHOT'
+
+ext {
+	lombokVersion = "1.18.30"
+	mapstructVersion = "1.6.0"
+	lombokMapstructBindingVersion = "0.2.0"
+	openApiGeneratorCliVersion = "7.3.0"
+	swaggerAnnotationVersion = "2.2.20"
+	swaggerUIVersion = "2.3.0"
+	restAssuredVersion = "5.4.0"
+	zerobounceSdkVersion = "1.1.9"
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	compileOnly 'org.projectlombok:lombok:${lombokVersion}'
+	runtimeOnly 'com.h2database:h2'
+
+	swaggerCodegen "org.openapitools:openapi-generator-cli:${openApiGeneratorCliVersion}"
+	implementation "io.swagger.core.v3:swagger-annotations:${swaggerAnnotationVersion}"
+	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${swaggerUIVersion}"
+	implementation "com.zerobounce.java:zerobouncesdk:${zerobounceSdkVersion}"
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker:3.1.1'
+	implementation 'io.github.resilience4j:resilience4j-spring-boot2:2.0.0'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+}
+
+dependencyManagement {
+	imports {
+		mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2023.0.0'
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+processResources {
+	dependsOn(generateSwaggerCode)}
+
+swaggerSources {
+	app {
+		inputFile = file("${rootDir}/src/main/resources/servergen/api.yaml")
+		code {
+			language = 'spring'
+			configFile = file("${rootDir}/src/main/resources/servergen/config.json")
+			outputDir = file(this.project.getBuildDir().toString() + "/generated/sources/codegen")
+
+			components = [models: true, apis: true, supportingFiles: 'ApiUtil.java']
+			dependsOn validation
+		}
+	}
+}
+
+compileJava.dependsOn(swaggerSources.app.code)
+sourceSets.main.java.srcDir("${swaggerSources.app.code.outputDir}/src/main/java")

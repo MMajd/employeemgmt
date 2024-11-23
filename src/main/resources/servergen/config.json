@@ -1,0 +1,16 @@
+{
+  "library": "spring-boot",
+  "dateLibrary": "java17",
+  "hideGenerationTimestamp": true,
+  "modelPackage": "com.rawafed.employeemgmt.api.model",
+  "apiPackage": "com.rawafed.employeemgmt.api",
+  "invokerPackage": "com.rawafed.employeemgmt.api",
+  "serializableModel": true,
+  "openApiNullable": false,
+  "useTags": true,
+  "useGzipFeature": true,
+  "unhandledException": true,
+  "useSpringBoot3": true,
+  "useSwaggerUI": true,
+  "interfaceOnly": true
+}
