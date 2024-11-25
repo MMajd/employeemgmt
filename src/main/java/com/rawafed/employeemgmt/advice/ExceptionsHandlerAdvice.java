@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
 
 import java.io.IOException;
@@ -34,9 +36,15 @@ import static org.springframework.http.HttpStatus.*;
 public class ExceptionsHandlerAdvice implements RequestBodyAdvice {
     private static final ThreadLocal<Object> REQUEST_BODY_HOLDER = new ThreadLocal<>();
 
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<Error> noHandlerFoundException(
+            HttpServletRequest request, Exception ex) {
+        return createError(ErrorEnum.NOHANDLER_FOUND_ERR, NOT_FOUND, request, ex);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Error> handleNotFoundExceptions(
-            HttpServletRequest request, ResourceNotFoundException ex) {
+            HttpServletRequest request, Exception ex) {
         return createError(ErrorEnum.RESOURCE_NOT_FOUND_ERR, NOT_FOUND, request, ex);
     }
 

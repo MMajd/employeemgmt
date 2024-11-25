@@ -31,7 +31,7 @@ import static org.springframework.http.HttpStatus.*;
 
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class EmployeeModelOperationTest {
+public class EmployeeApiOperationTest {
     @Mock
     private EventPublishingService applicationEventPublisher;
 

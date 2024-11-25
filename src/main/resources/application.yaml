@@ -29,7 +29,8 @@ spring:
 
   cloud:
     circuitbreaker:
-      resilient4j:
+      resilience4j:
+        enabled: true
         instances:
           mailgun-service:
             failureRateThreshold: 50

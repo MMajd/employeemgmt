@@ -5,7 +5,8 @@ public enum ErrorEnum implements IErrorDescriptor {
     RESOURCE_NOT_FOUND_ERR("EMGM002", "Resource not found in database"),
     DUPLICATE_KEY_ERR("EMGM003", "Email already exist in database"),
     INVALID_REQUEST_ERR("EMGM004", "Incorrect request body, parameters or variables."),
-    UNSUPPORTED_TILL_VERIFIED_ERR("EMGM005", "Operation is unsupported till employee data is verified");
+    UNSUPPORTED_TILL_VERIFIED_ERR("EMGM005", "Operation is unsupported till employee data is verified"),
+    NOHANDLER_FOUND_ERR("EMGM006", "API not found");
 
     private final String code;
     private final String message;

@@ -48,7 +48,8 @@ dependencies {
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${swaggerUIVersion}"
 	implementation "com.zerobounce.java:zerobouncesdk:${zerobounceSdkVersion}"
 
-	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker:3.1.1'
+	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j:3.1.1'
+
 	implementation 'io.github.resilience4j:resilience4j-spring-boot2:2.0.0'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"

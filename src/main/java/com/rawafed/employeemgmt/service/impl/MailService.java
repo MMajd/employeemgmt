@@ -34,6 +34,7 @@ public class MailService implements IMailService {
             javaMailSender.send(mimeMessage);
         } catch (MessagingException | MailException e) {
             log.error("Something went wrong while sending the mail, error: {}", e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

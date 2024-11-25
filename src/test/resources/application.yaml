@@ -27,16 +27,6 @@ spring:
           auth: true
           starttls.enable: true
 
-  cloud:
-    circuitbreaker:
-      resilient4j:
-        instances:
-          mailgun-service:
-            failureRateThreshold: 50
-            slidingWindowSize: 3
-            waitDurationInOpenState: 10ms
-            minimumNumberOfCalls: 0   # Minimum number of calls before calculating failure rate
-
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
