@@ -7,16 +7,14 @@ import com.rawafed.employeemgmt.domain.presistent.model.EmployeeModel;
 import com.rawafed.employeemgmt.domain.presistent.repo.EmployeeRepository;
 import com.rawafed.employeemgmt.service.impl.EmployeeService;
 import com.rawafed.employeemgmt.service.impl.EventPublishingService;
-import com.rawafed.employeemgmt.service.impl.MailService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.math.BigDecimal;
@@ -26,23 +24,21 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.*;
 
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class EmployeeApiOperationTest {
-    @Mock
+    @MockBean
     private EventPublishingService applicationEventPublisher;
-
-    @Mock
-    private MailService mailService;
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    @InjectMocks
     private EmployeeService employeeService;
 
     @LocalServerPort
@@ -51,7 +47,9 @@ public class EmployeeApiOperationTest {
     @BeforeEach
     void beforeEach() {
         RestAssured.port = port;
+
         employeeRepository.save(EMPLOYEE_MODEL);
+        doNothing().when(applicationEventPublisher).publish(any());
     }
 
     @AfterEach
